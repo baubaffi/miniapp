@@ -1,0 +1,147 @@
+:root {
+    --bg-color: #000000;
+    --card-bg: #1C1C1E;
+    --text-primary: #FFFFFF;
+    --text-secondary: #8E8E93;
+    --accent-blue: #0A84FF;
+    --accent-red: #FF453A;
+    --accent-green: #30D158;
+    --accent-orange: #FF9F0A;
+    --separator: #38383A;
+    --blur-bg: rgba(28, 28, 30, 0.85); /* Полупрозрачный фон */
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    padding-bottom: 90px; /* Место под таб-бар */
+    overflow-x: hidden;
+}
+
+/* --- Header --- */
+.header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    padding: 16px 16px 10px;
+    z-index: 100;
+    border-bottom: 0.5px solid var(--separator);
+}
+.blur-bg {
+    background-color: var(--blur-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+.top-row {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
+}
+.top-row h1 { font-size: 28px; font-weight: 800; }
+.user-avatar { width: 32px; height: 32px; background: var(--separator); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+
+/* Категории */
+.categories-scroll {
+    display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none;
+}
+.categories-scroll::-webkit-scrollbar { display: none; }
+.cat-pill {
+    background: var(--card-bg); border: 1px solid var(--separator); color: var(--text-secondary);
+    padding: 6px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; white-space: nowrap; transition: 0.2s;
+}
+.cat-pill.active { background: var(--text-primary); color: var(--bg-color); border-color: var(--text-primary); }
+
+/* --- Список задач --- */
+.content-area { margin-top: 110px; padding: 0 16px; }
+
+.task-card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    transition: transform 0.2s;
+}
+.task-card:active { transform: scale(0.98); }
+
+/* Чекбокс */
+.checkbox-circle {
+    width: 24px; height: 24px; min-width: 24px;
+    border: 2px solid var(--text-secondary); border-radius: 50%;
+    margin-top: 2px; position: relative; cursor: pointer;
+}
+.task-card.completed .checkbox-circle {
+    background: var(--accent-blue); border-color: var(--accent-blue);
+}
+.task-card.completed .checkbox-circle::after {
+    content: '✓'; color: white; position: absolute; left: 5px; top: -1px; font-size: 14px; font-weight: bold;
+}
+
+/* Контент задачи */
+.task-content { flex-grow: 1; }
+.task-title { font-size: 17px; font-weight: 500; margin-bottom: 4px; }
+.task-card.completed .task-title { text-decoration: line-through; color: var(--text-secondary); }
+.task-meta { display: flex; gap: 8px; font-size: 12px; color: var(--text-secondary); align-items: center; }
+
+/* Бейджи */
+.badge { padding: 2px 6px; border-radius: 4px; font-weight: 600; }
+.badge.priority-high { background: rgba(255, 69, 58, 0.2); color: var(--accent-red); }
+.badge.priority-medium { background: rgba(255, 159, 10, 0.2); color: var(--accent-orange); }
+
+/* --- FAB (Кнопка добавления) --- */
+.fab {
+    position: fixed; bottom: 100px; right: 20px;
+    width: 56px; height: 56px;
+    background: var(--accent-blue); border-radius: 50%;
+    border: none; box-shadow: 0 4px 12px rgba(10, 132, 255, 0.4);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 90; cursor: pointer; transition: transform 0.2s;
+}
+.fab:active { transform: scale(0.9); }
+
+/* --- Bottom Nav --- */
+.bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; height: 85px;
+    display: flex; justify-content: space-around; padding-top: 12px;
+    border-top: 0.5px solid var(--separator); z-index: 100;
+}
+.nav-item {
+    background: none; border: none; color: var(--text-secondary);
+    display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px;
+}
+.nav-item.active { color: var(--accent-blue); }
+
+/* --- Modal --- */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5); z-index: 1000;
+    display: flex; align-items: flex-end;
+    opacity: 0; pointer-events: none; transition: 0.3s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: auto; }
+
+.modal-sheet {
+    background: var(--card-bg); width: 100%; border-radius: 20px 20px 0 0;
+    padding: 20px; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.modal-overlay.open .modal-sheet { transform: translateY(0); }
+
+.modal-header { display: flex; justify-content: space-between; margin-bottom: 20px; align-items: center; }
+.modal-header h3 { font-size: 17px; }
+.primary-text-btn { background: none; border: none; color: var(--accent-blue); font-weight: 700; font-size: 17px; }
+
+.modal-input-title {
+    width: 100%; background: none; border: none; color: white; font-size: 22px; font-weight: 600; margin-bottom: 12px;
+}
+.modal-input-desc {
+    width: 100%; background: none; border: none; color: var(--text-secondary); font-size: 16px; margin-bottom: 20px; resize: none;
+}
+.modal-options .option-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 0; border-top: 1px solid var(--separator);
+}
+.date-picker, .priority-select {
+    background: var(--separator); border: none; color: white; padding: 6px 12px; border-radius: 8px; font-size: 14px;
+}
